@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { calculate, cumulative, ladderFor, normalRank, parseXp, shortXp, MAX_LEVEL } from '../assets/calculator.js';
+import { calculate, cumulative, ladderFor, normalRank, parseXp, shortXp, formatHours, MAX_LEVEL } from '../assets/calculator.js';
 import { normalCosts, seasonLadders } from '../assets/xp-data.js';
 
 const normalCheckpoints = { 70: 1163263, 100: 16108066, 130: 140115452, 160: 1072268042, 190: 16725913668, 220: 123188303310, 250: 898316800466 };
@@ -24,7 +24,7 @@ test('every season ladder has exactly the published entries and total', () => {
 test('normal XP: level 70 to 100 and partial next-level XP', () => {
   assert.equal(calculate({ current: 70, target: 100 }).remaining, 14944803);
   assert.equal(calculate({ current: 70, target: 71, earned: 97114 }).remaining, 100000);
-  assert.equal(calculate({ current: 70, target: 100, earned: 97114, daily: 1000000 }).days, 15);
+  assert.equal(calculate({ current: 70, target: 100, earned: 97114, hourly: 1000000 }).hours, (14944803 - 97114) / 1000000);
 });
 
 test('season XP is a separate pool with shown cap + season level', () => {
@@ -49,7 +49,7 @@ test('invalid levels and progress cannot cause inaccurate totals', () => {
   assert.throws(() => calculate({ current: 70, target: 71, earned: 197114 }), RangeError);
   assert.throws(() => calculate({ mode: 'season', season: 1, current: 71, target: 71 }), RangeError);
   assert.throws(() => ladderFor('season', 6), RangeError);
-  assert.throws(() => calculate({ current: 1, target: 100, daily: -1 }), RangeError);
+  assert.throws(() => calculate({ current: 1, target: 100, hourly: -1 }), RangeError);
 });
 
 test('user-friendly quantities and rank boundaries', () => {
@@ -62,4 +62,15 @@ test('user-friendly quantities and rank boundaries', () => {
   assert.equal(shortXp(1692972522328), '1.69T');
   assert.equal(normalRank(70), 'Elite III');
   assert.equal(normalRank(71), 'Expert I');
+});
+
+test('XP/hour estimates show minutes, hours and days', () => {
+  assert.equal(calculate({ current: 70, target: 71, hourly: 50000 }).hours, 197114 / 50000);
+  assert.equal(calculate({ current: 70, target: 70 }).hours, 0);
+  assert.equal(calculate({ current: 70, target: 71 }).hours, null);
+  assert.equal(formatHours(0), '0m');
+  assert.equal(formatHours(0.5), '30m');
+  assert.equal(formatHours(1.5), '1h 30m');
+  assert.equal(formatHours(50.5), '2d 3h');
+  assert.equal(formatHours(null), '—');
 });
