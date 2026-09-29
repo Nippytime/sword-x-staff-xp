@@ -15,65 +15,54 @@
     <header class="topbar">
       <a class="wordmark" href="./" aria-label="Sword and Staff XP Ledger home">
         <span class="brand-seal" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none"><path d="m9 9 30 30M39 9 9 39" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"/><path d="m9 4 5 10-10-5 5-5Zm30 0-5 10 10-5-5-5ZM21 34l-4 4m10-4 4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-        <span class="brand-lines"><strong>XP LEDGER</strong><small>SWORD <span>×</span> STAFF</small></span>
+        <span class="brand-lines"><strong>XP CALC</strong><small>SWORD <span>×</span> STAFF</small></span>
       </a>
       <nav class="top-links" aria-label="Page navigation">
-        <a href="#calculator">Calculator</a><a href="#reference">XP table</a>
+        <a href="#reference">XP table</a>
         <a class="top-source" href="https://www.purrwikimania.com/xp.html" target="_blank" rel="noopener noreferrer">Source <span aria-hidden="true">↗</span></a>
       </nav>
     </header>
 
     <main>
-      <section class="intro" aria-labelledby="page-title">
-        <div class="intro-text">
-          <p class="eyebrow"><span class="diamond" aria-hidden="true"></span> XP CALCULATOR</p>
-          <h1 id="page-title">Level up.<br><em>Know your XP.</em></h1>
-          <p class="intro-copy">Your level, your goal, your XP.</p>
-          <div class="intro-marks" aria-label="Data coverage"><span><b>250</b> levels</span><span class="mark-divider" aria-hidden="true"></span><span><b>5</b> seasons</span></div>
-        </div>
-        <div class="hero-art" aria-hidden="true"><div class="art-circle ring-one"></div><div class="art-circle ring-two"></div><div class="art-cross art-cross-one">✳</div><div class="art-cross art-cross-two">✦</div><div class="art-caption">NORMAL <span> / </span> SEASON</div><div class="art-level">01<span>—</span>250</div><div class="art-needle"></div><div class="art-index">SWORD <span> × </span> STAFF</div></div>
-      </section>
-
       <section id="calculator" class="calculator" aria-labelledby="calc-heading">
-        <div class="section-heading"><div><p class="eyebrow">CALCULATOR</p><h2 id="calc-heading">How much XP?</h2></div></div>
+        <div class="section-heading"><h1 id="calc-heading">XP calculator</h1></div>
         <div class="workbench">
           <form class="inputs-panel" id="xp-form" novalidate>
-            <div class="form-top"><span class="form-index">YOUR PLAN</span><span class="live-tag"><span></span> LIVE</span></div>
-            <fieldset class="mode-set"><legend>XP type</legend><div class="mode-switch" aria-label="XP ladder"><button type="button" class="mode-button is-active" data-mode="normal" aria-pressed="true">Normal XP</button><button type="button" class="mode-button" data-mode="season" aria-pressed="false">Season XP</button></div></fieldset>
-            <p class="mode-helper" id="normal-mode-helper">Normal and Season XP are separate.</p>
-            <div class="season-area" id="season-area" hidden><label for="season">Promotion / season</label><div class="select-wrap"><select id="season" name="season"><option value="1">S1 · Witching Hours / Expert</option><option value="2">S2 · Crossed Paths / Champion</option><option value="3">S3 · Finale of Chaos / Master</option><option value="4">S4 · Bizarre Spectacle / Paragon</option><option value="5">S5 · Frostfire Anthem / Saint</option></select><span aria-hidden="true">⌄</span></div><p class="help-text" id="season-description"></p></div>
-            <div class="fields-heading"><span>LEVELS</span><span aria-hidden="true">↙</span></div>
+            
+            <fieldset class="mode-set"><legend>XP type</legend><div class="mode-switch" aria-label="XP ladder"><button type="button" class="mode-button is-active" data-mode="normal" aria-pressed="true">Normal</button><button type="button" class="mode-button" data-mode="season" aria-pressed="false">Season</button></div></fieldset>
+            <p class="mode-helper" id="normal-mode-helper">Normal and season XP are separate.</p>
+            <div class="season-area" id="season-area" hidden><label for="season">Season</label><div class="select-wrap"><select id="season" name="season"><option value="1">Season 1 · Expert</option><option value="2">Season 2 · Champion</option><option value="3">Season 3 · Master</option><option value="4">Season 4 · Paragon</option><option value="5">Season 5 · Saint</option></select><span aria-hidden="true">⌄</span></div><p class="help-text" id="season-description"></p></div>
+            
             <div class="level-pair"><div class="level-field"><label for="current">Current level </label><input id="current" name="current" type="number" inputmode="numeric" min="1" max="250" step="1" value="70" required></div><span class="level-arrow" aria-hidden="true">→</span><div class="level-field"><label for="target">Target level </label><input id="target" name="target" type="number" inputmode="numeric" min="1" max="250" step="1" value="100" required></div></div>
-            <div class="presets" role="group" aria-label="Quick target buttons"><span>SET TARGET</span><button type="button" data-jump="1">+1</button><button type="button" data-jump="5">+5</button><button type="button" data-jump="10">+10</button><button type="button" data-jump="max">MAX ↗</button></div>
-            <div class="field-row"><div class="stacked"><label for="earned">XP earned this level</label><div class="input-with-unit"><input id="earned" name="earned" type="text" inputmode="decimal" placeholder="0" value="0" autocomplete="off"><span>XP</span></div><div class="mini-progress" role="progressbar" aria-label="Progress to next level" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="current-progress"><span id="current-progress-fill"></span></div><p class="help-text" id="next-level-hint">Enter XP already earned.</p></div></div>
-            <div class="field-row last-field"><div class="stacked"><label for="daily">Daily XP <span class="optional">OPTIONAL</span></label><div class="input-with-unit"><input id="daily" name="daily" type="text" inputmode="decimal" placeholder="e.g. 1.5M" autocomplete="off"><span>XP / DAY</span></div></div></div>
+            <div class="presets" role="group" aria-label="Quick target buttons"><span>GOAL</span><button type="button" data-jump="1">+1</button><button type="button" data-jump="5">+5</button><button type="button" data-jump="10">+10</button><button type="button" data-jump="max">MAX</button></div>
+            <div class="field-row"><div class="stacked"><label for="earned">XP in this level</label><div class="input-with-unit"><input id="earned" name="earned" type="text" inputmode="decimal" placeholder="0" value="0" autocomplete="off"><span>XP</span></div><div class="mini-progress" role="progressbar" aria-label="Progress to next level" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="current-progress"><span id="current-progress-fill"></span></div><p class="help-text" id="next-level-hint"></p></div></div>
+            <div class="field-row last-field"><div class="stacked"><label for="hourly">XP per hour <span class="optional">OPTIONAL</span></label><div class="input-with-unit"><input id="hourly" name="hourly" type="text" inputmode="decimal" placeholder="e.g. 50K" autocomplete="off"><span>XP/h</span></div></div></div>
             <p class="input-error" id="input-error" role="alert" hidden></p>
-            <div class="form-foot"><span><span class="tiny-star">✳</span> Auto-saved</span><button type="button" class="reset-button" id="reset-button">Reset ↺</button></div>
+            <div class="form-foot"><span>Auto-saved</span><button type="button" class="reset-button" id="reset-button">Reset ↺</button></div>
           </form>
 
           <div class="results" aria-live="polite" aria-atomic="true">
-            <div class="result-top"><span>RESULT</span><span class="result-glyph" aria-hidden="true">✳</span></div>
+            <div class="result-top"><span>YOUR XP</span><span class="result-glyph" aria-hidden="true">✳</span></div>
             <div class="result-body" id="result-body">
               <div class="result-context"><span class="context-dot" aria-hidden="true"></span><span id="ladder-name">NORMAL XP</span></div>
-              <p class="result-label">XP TO GO</p>
+              <p class="result-label">XP NEEDED</p>
               <p class="hero-value" id="needed-short">—</p>
               <div class="exact-value"><span id="needed-exact">— XP</span><button type="button" class="copy-exact" id="copy-exact" aria-label="Copy exact XP amount" title="Copy exact XP">⧉</button></div>
               <div class="result-divider" aria-hidden="true"><span></span><i>✦</i><span></span></div>
-              <div class="journey-line"><div><span>FROM</span><strong id="display-current">LEVEL 70</strong></div><div class="journey-track" aria-hidden="true"><span>✦</span></div><div class="journey-end"><span>TO</span><strong id="display-target">LEVEL 100</strong></div></div>
-              <div class="stat-cells"><div class="stat-cell"><span>LEVELS</span><strong id="levels-remaining">—</strong><small id="level-caption">to your goal</small></div><div class="stat-cell"><span>NEXT LEVEL</span><strong id="next-needed">—</strong><small>XP remaining</small></div><div class="stat-cell"><span>ETA</span><strong id="time-estimate">—</strong><small id="date-estimate">add daily XP</small></div></div>
-              <div class="goal-progress"><div class="goal-progress-top"><span>GOAL PROGRESS</span><strong id="goal-progress-pct">0%</strong></div><div class="goal-progress-track"><span id="goal-progress-fill"></span></div><p id="goal-progress-detail" class="goal-progress-detail"></p></div>
+              <div class="journey-line"><div><span>NOW</span><strong id="display-current">LEVEL 70</strong></div><div class="journey-track" aria-hidden="true"><span>✦</span></div><div class="journey-end"><span>GOAL</span><strong id="display-target">LEVEL 100</strong></div></div>
+              <div class="stat-cells"><div class="stat-cell"><span>LEVELS LEFT</span><strong id="levels-remaining">—</strong></div><div class="stat-cell"><span>NEXT LEVEL XP</span><strong id="next-needed">—</strong></div><div class="stat-cell"><span>TIME LEFT</span><strong id="time-estimate">—</strong><small id="date-estimate">Add XP/hour</small></div></div>
             </div>
-            <div class="result-error" id="result-error" hidden><span class="error-symbol">!</span><h3>Check your numbers.</h3><p id="result-error-message"></p></div>
-            <div class="result-footer"><span id="result-meta"></span><button type="button" id="share-button">Share <span aria-hidden="true">↗</span></button></div>
+            <div class="result-error" id="result-error" hidden><span class="error-symbol">!</span><h3>Check inputs</h3><p id="result-error-message"></p></div>
+            <div class="result-footer"><button type="button" id="share-button">Share <span aria-hidden="true">↗</span></button></div>
           </div>
         </div>
-        <div class="season-note" id="season-note" hidden><span class="note-icon">i</span><p><strong>Season XP</strong> is separate from normal XP and resets each season.</p></div>
+        
       </section>
 
-      <section id="reference" class="reference" aria-labelledby="reference-heading"><div class="section-heading reference-heading"><div><p class="eyebrow">XP TABLE</p><h2 id="reference-heading">XP by level</h2></div></div><div class="reference-box"><div class="reference-tools"><div><span class="form-index">LEVELS</span><p id="reference-subtitle">Normal player progression</p></div><label class="search-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.7"></circle><path d="m16 16 5 5"></path></svg><span class="sr-only">Find a level or rank</span><input id="reference-search" type="search" placeholder="Find level…" autocomplete="off"></label></div><div class="table-scroll" tabindex="0" aria-label="Scrollable experience table"><table><thead><tr><th scope="col">LEVEL</th><th scope="col">RANK / TYPE</th><th scope="col" class="numeric">LEVEL XP</th><th scope="col" class="numeric">TOTAL XP</th></tr></thead><tbody id="reference-body"></tbody></table><p id="reference-empty" class="reference-empty" hidden>No matches.</p></div><div class="table-footer"><span id="table-row-count">—</span><span id="snapshot-tag">XP DATA • 29 SEP 2026</span></div></div></section>
+      <section id="reference" class="reference" aria-labelledby="reference-heading"><div class="section-heading reference-heading"><h2 id="reference-heading">XP table</h2></div><div class="reference-box"><div class="reference-tools"><div><span class="form-index">LEVELS</span><p id="reference-subtitle">Normal levels</p></div><label class="search-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.7"></circle><path d="m16 16 5 5"></path></svg><span class="sr-only">Find a level or rank</span><input id="reference-search" type="search" placeholder="Find level…" autocomplete="off"></label></div><div class="table-scroll" tabindex="0" aria-label="Scrollable experience table"><table><thead><tr><th scope="col">LEVEL</th><th scope="col">RANK</th><th scope="col" class="numeric">LEVEL XP</th><th scope="col" class="numeric">TOTAL XP</th></tr></thead><tbody id="reference-body"></tbody></table><p id="reference-empty" class="reference-empty" hidden>No matches.</p></div><div class="table-footer"><span id="table-row-count">—</span><span id="snapshot-tag">Updated Sep 29, 2026</span></div></div></section>
     </main>
 
-    <footer class="site-footer"><p>XP data: <a href="https://www.purrwikimania.com/xp.html" target="_blank" rel="noopener noreferrer">Purrwikimania ↗</a> · Unofficial.</p></footer>
+    <footer class="site-footer"><p>Data: <a href="https://www.purrwikimania.com/xp.html" target="_blank" rel="noopener noreferrer">Purrwikimania ↗</a></p></footer>
   </div>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 </body>
