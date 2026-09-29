@@ -11,3 +11,56 @@
 @media(max-width:760px){.site-wrap{padding:0 21px}.topbar{min-height:76px}.brand-seal{width:41px;height:41px}.brand-seal svg{width:26px}.brand-lines strong{font-size:14px}.top-links{gap:13px}.top-links>a:not(.top-source){display:none}.top-links .top-source{padding:10px 12px;font-size:10px}.intro{grid-template-columns:1fr;min-height:0}.intro-text{padding:42px 0 35px}.intro h1{font-size:clamp(51px,11vw,77px)}.intro-copy{font-size:14px;max-width:530px}.hero-art{display:none}.calculator,.reference{padding-top:44px}.section-heading h2{font-size:37px}.aside-note{display:none}.workbench{grid-template-columns:1fr}.inputs-panel{padding:29px}.mode-set{margin-top:28px}.results{min-height:550px}.result-body{padding:37px 30px 35px}.result-label{margin-top:32px}.hero-value{font-size:clamp(71px,12vw,104px)}.stat-cell strong{font-size:clamp(25px,6vw,38px)}.reference{padding-top:55px;padding-bottom:56px}.reference-intro{display:none}.reference-tools{padding:17px 19px}.reference-tools p{font-size:17px}th,td{padding-left:19px;padding-right:19px}.table-footer{padding:14px 18px}.site-footer{flex-wrap:wrap}.site-footer p{order:3;flex-basis:100%;line-height:1.6}}
 @media(max-width:490px){.site-wrap{padding:0 16px}.brand-lines small{font-size:8px}.top-links .top-source{padding:9px 10px}.top-source span{margin-left:4px}.intro h1{font-size:clamp(49px,12vw,67px)}.intro-marks{gap:11px;font-size:9px}.intro-marks b{font-size:11px}.eyebrow{font-size:9px;gap:8px}.eyebrow-line{width:20px}.section-heading h2{font-size:33px}.inputs-panel{padding:23px}.level-pair{gap:7px;grid-template-columns:minmax(0,1fr) 19px minmax(0,1fr)}.level-field input{font-size:34px;padding:10px}.level-field>label{font-size:11px}.label-muted{font-size:8px}.presets>span{font-size:8px}.presets button{padding:7px}.result-body{padding:30px 24px}.result-top{padding:25px 24px 0}.result-footer{padding:17px 24px}.hero-value{font-size:clamp(66px,16vw,83px)}.stat-cell{padding:21px 4px 18px 0}.stat-cell+.stat-cell{padding-left:8px}.stat-cell span{font-size:8px}.stat-cell strong{font-size:24px}.stat-cell small{font-size:10px}.journey-line{gap:9px}.journey-line strong{font-size:12px}.result-footer span{font-size:8px}.result-footer button{font-size:10px;padding:10px}.reference-tools{flex-direction:column;align-items:stretch;gap:14px}.search-box{width:100%}th,td{padding:12px 13px}.row-pill{margin-left:4px}.site-footer{font-size:10px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+
+/* Compact presentation. */
+.intro{min-height:0;grid-template-columns:minmax(0,1fr) 295px}
+.intro-text{padding:34px 0 33px}
+.intro h1{font-size:clamp(45px,4.7vw,67px);margin:13px 0 10px}
+.intro-copy{margin-bottom:16px;font-size:14px}
+.hero-art{min-height:240px}
+.art-circle{width:198px;height:198px;top:18px}
+.ring-two{width:265px;height:265px;top:-15px}
+.art-level{font-size:55px}
+.art-needle{width:235px}
+.art-cross-one{top:40px;right:32px}
+.art-cross-two{bottom:35px;left:32px}
+.calculator,.reference{padding-top:36px}
+.section-heading{margin-bottom:18px}
+.section-heading h2{font-size:clamp(28px,3vw,37px);margin-top:4px}
+.workbench{min-height:0}
+.inputs-panel{padding:clamp(24px,2.8vw,36px)}
+.mode-set{margin-top:23px}
+.fields-heading{margin-top:20px;padding-top:16px}
+.field-row,.last-field{margin-top:20px}
+.form-foot{padding-top:16px}
+.result-top{padding-top:29px}
+.result-body{padding-top:25px;padding-bottom:26px}
+.result-label{margin:23px 0 8px}
+.hero-value{font-size:clamp(60px,7.5vw,100px)}
+.result-divider{margin:27px 0 23px}
+.stat-cells{margin-top:25px}
+.stat-cell{padding-top:18px;padding-bottom:16px}
+.stat-cell>small:not(#date-estimate),#level-caption{display:none}
+.goal-progress{margin-top:20px}
+.goal-progress-detail:empty{display:none}
+.result-footer{padding-top:15px;padding-bottom:15px;justify-content:flex-end}
+.result-footer #result-meta{display:none}
+.reference{padding-bottom:53px}
+.site-footer{padding:15px 0 26px;justify-content:center}
+@media(max-width:760px){
+ .intro-text{padding:29px 0 26px}
+ .intro h1{font-size:clamp(43px,10vw,60px)}
+ .calculator,.reference{padding-top:31px}
+ .results{min-height:0}
+ .result-body{padding-top:26px}
+ .result-label{margin-top:22px}
+ .hero-value{font-size:clamp(64px,13vw,96px)}
+ .reference{padding-bottom:38px}
+}
+@media(max-width:490px){
+ .intro h1{font-size:clamp(43px,11vw,56px)}
+ .section-heading h2{font-size:30px}
+ .mode-set{margin-top:20px}
+ .stat-cell strong{font-size:23px}
+}
