@@ -64,3 +64,23 @@
  .mode-set{margin-top:20px}
  .stat-cell strong{font-size:23px}
 }
+
+/* One-screen calculator */
+.calculator{padding-top:clamp(24px,4vw,48px)}
+.section-heading{margin-bottom:16px}
+.section-heading h1{margin:0;font:400 clamp(34px,3.5vw,48px)/1.1 var(--serif);letter-spacing:-.045em}
+.mode-set{margin-top:0}
+.mode-helper{margin:8px 0 0}
+.season-area{margin-top:17px}
+.level-pair{margin-top:24px}
+.result-label{margin-top:20px}
+.result-divider{margin:23px 0 20px}
+.stat-cells{margin-top:22px}
+.stat-cell{padding-top:16px;padding-bottom:15px}
+.stat-cell>span{letter-spacing:.025em}
+@media(max-width:760px){
+  .calculator{padding-top:27px}
+  .section-heading h1{font-size:38px}
+  .level-pair{margin-top:22px}
+  .mode-set{margin-top:0}
+}
