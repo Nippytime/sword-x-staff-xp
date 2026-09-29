@@ -1,20 +1,20 @@
-import { calculate, cumulative, formatXp, ladderFor, MAX_LEVEL, normalRank, parseXp, shortXp, snapshotDate } from './calculator.js';
+import { calculate, cumulative, formatXp, ladderFor, MAX_LEVEL, normalRank, parseXp, shortXp, formatHours, snapshotDate } from './calculator.js';
 
 const $ = (selector) => document.querySelector(selector);
 const defaults = () => ({
   mode: 'normal', season: 1,
-  normal: { current: '70', target: '100', earned: '0', daily: '' },
-  seasonValues: { current: '0', target: '25', earned: '0', daily: '' }
+  normal: { current: '70', target: '100', earned: '0', hourly: '' },
+  seasonValues: { current: '0', target: '25', earned: '0', hourly: '' }
 });
 const storageKey = 'sxs-xp-ledger-v1';
-const fields = { current: $('#current'), target: $('#target'), earned: $('#earned'), daily: $('#daily') };
+const fields = { current: $('#current'), target: $('#target'), earned: $('#earned'), hourly: $('#hourly') };
 const ids = Object.fromEntries([
   'needed-short', 'needed-exact', 'ladder-name', 'display-current', 'display-target',
-  'levels-remaining', 'level-caption', 'next-needed', 'time-estimate', 'date-estimate',
-  'goal-progress-pct', 'goal-progress-fill', 'goal-progress-detail', 'current-progress',
+  'levels-remaining', 'next-needed', 'time-estimate', 'date-estimate',
+  'current-progress',
   'current-progress-fill', 'next-level-hint', 'result-body', 'result-error',
   'result-error-message', 'input-error', 'reference-subtitle', 'reference-body',
-  'reference-empty', 'table-row-count', 'result-meta', 'season-description'
+  'reference-empty', 'table-row-count', 'season-description'
 ].map((id) => [id, document.getElementById(id)]));
 
 function readSaved() {
@@ -28,6 +28,8 @@ function readSaved() {
     normal: { ...base.normal, ...(restored.normal ?? {}) },
     seasonValues: { ...base.seasonValues, ...(restored.seasonValues ?? {}) }
   };
+  delete state.normal.daily;
+  delete state.seasonValues.daily;
   const query = new URLSearchParams(location.search);
   if (query.has('mode')) state.mode = query.get('mode') === 'season' ? 'season' : 'normal';
   if (query.has('season') && /^[1-5]$/.test(query.get('season'))) state.season = Number(query.get('season'));
@@ -67,24 +69,23 @@ function updateSelection() {
   }
   $('#season-area').hidden = !seasonMode;
   $('#normal-mode-helper').hidden = seasonMode;
-  $('#season-note').hidden = !seasonMode;
   $('#season').value = String(state.season);
   const ladder = ladderFor(state.mode, state.season);
   fields.current.min = String(ladder.start);
   fields.target.min = String(ladder.start);
   fields.current.max = String(ladder.costs.length - 1);
   fields.target.max = String(ladder.costs.length - 1);
-  $('label[for=current]').firstChild.nodeValue = seasonMode ? 'Current Season Level ' : 'Current level ';
-  $('label[for=target]').firstChild.nodeValue = seasonMode ? 'Target Season Level ' : 'Target level ';
-  if (seasonMode) ids['season-description'].textContent = `Cap ${ladder.cap} · Season Lv 0–${ladder.limit}`;
+  $('label[for=current]').firstChild.nodeValue = seasonMode ? 'Season level ' : 'Current level ';
+  $('label[for=target]').firstChild.nodeValue = 'Target level ';
+  if (seasonMode) ids['season-description'].textContent = `Level 0–${ladder.limit} · Player level ${ladder.cap}–${ladder.cap + ladder.limit}`;
 }
 
 function calculateDraft() {
-  const { current, target, earned, daily } = activeDraft();
+  const { current, target, earned, hourly } = activeDraft();
   return calculate({
     mode: state.mode, season: state.season,
     current: levelNumber(current), target: levelNumber(target),
-    earned: intOrInvalid(parseXp(earned)), daily: intOrInvalid(parseXp(daily))
+    earned: intOrInvalid(parseXp(earned)), hourly: intOrInvalid(parseXp(hourly))
   });
 }
 
@@ -114,40 +115,40 @@ function renderResult(result) {
   ids['ladder-name'].textContent = seasonMode ? `SEASON ${result.id} · ${result.rank.toUpperCase()}` : 'NORMAL XP';
   ids['needed-short'].textContent = shortXp(result.remaining);
   ids['needed-exact'].textContent = `${formatXp(result.remaining)} XP`;
-  ids['display-current'].textContent = `LV ${result.shownCurrent}${seasonMode ? ` (+${result.current})` : ''}`;
-  ids['display-target'].textContent = `LV ${result.shownTarget}${seasonMode ? ` (+${result.target})` : ''}`;
+  ids['display-current'].textContent = `LV ${result.shownCurrent}`;
+  ids['display-target'].textContent = `LV ${result.shownTarget}`;
   ids['levels-remaining'].textContent = formatXp(result.levels);
-  ids['level-caption'].textContent = seasonMode ? `${formatXp(result.score)} score` : '';
   ids['next-needed'].textContent = result.nextCost ? shortXp(result.nextRemaining) : 'MAX';
-  ids['goal-progress-pct'].textContent = `${Math.min(100, result.progress).toFixed(1).replace(/\.0$/, '')}%`;
-  ids['goal-progress-fill'].style.width = `${result.progress}%`;
-  ids['goal-progress-detail'].textContent = seasonMode ? 'Season XP only' : '';
   ids['next-level-hint'].textContent = result.nextCost
     ? `${formatXp(result.earned)} / ${formatXp(result.nextCost)} XP`
     : 'Max level reached.';
   const currentPercent = result.nextCost ? Math.min(100, result.earned / result.nextCost * 100) : 100;
   ids['current-progress'].setAttribute('aria-valuenow', String(Math.round(currentPercent)));
   ids['current-progress-fill'].style.width = `${currentPercent}%`;
-  if (result.days == null) {
+  if (result.hours == null) {
     ids['time-estimate'].textContent = '—';
-    ids['date-estimate'].textContent = 'Add daily XP';
-  } else if (result.days > 36500) {
-    ids['time-estimate'].textContent = `${shortXp(result.days)} d`;
-    ids['date-estimate'].textContent = 'over 100 years';
+    ids['date-estimate'].textContent = 'Add XP/hour';
+  } else if (result.hours > 36500 * 24) {
+    ids['time-estimate'].textContent = '100y+';
+    ids['date-estimate'].textContent = '';
   } else {
-    ids['time-estimate'].textContent = result.days === 0 ? '0 days' : `${shortXp(result.days)} d`;
-    const projected = new Date();
-    projected.setHours(12, 0, 0, 0);
-    projected.setDate(projected.getDate() + result.days);
-    ids['date-estimate'].textContent = result.days === 0 ? 'Goal met' : `by ${new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(projected)}`;
+    ids['time-estimate'].textContent = formatHours(result.hours);
+    if (result.hours === 0) {
+      ids['date-estimate'].textContent = 'Goal reached';
+    } else {
+      const finish = new Date(Date.now() + result.hours * 3600000);
+      const year = finish.getFullYear() !== new Date().getFullYear() ? 'numeric' : undefined;
+      ids['date-estimate'].textContent = new Intl.DateTimeFormat('en-US', {
+        month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', year
+      }).format(finish);
+    }
   }
-  ids['result-meta'].textContent = seasonMode ? `SEASON ${result.id}` : 'NORMAL XP';
 }
 
 function renderTable() {
   const ladder = ladderFor(state.mode, state.season);
   const query = $('#reference-search').value.trim().toLowerCase();
-  const min = state.mode === 'normal' ? 1 : 1;
+  const min = 1;
   const current = levelNumber(activeDraft().current);
   const target = levelNumber(activeDraft().target);
   const totals = cumulative(ladder.costs);
@@ -162,7 +163,7 @@ function renderTable() {
   ids['reference-body'].innerHTML = matches.join('');
   ids['reference-empty'].hidden = matches.length > 0;
   ids['table-row-count'].textContent = `${matches.length} / ${ladder.costs.length - 1} levels`;
-  ids['reference-subtitle'].textContent = state.mode === 'season' ? `Season ${ladder.id} · ${ladder.rank} · cap ${ladder.cap}` : `Normal levels 1–${MAX_LEVEL}`;
+  ids['reference-subtitle'].textContent = state.mode === 'season' ? `Season ${ladder.id} · ${ladder.rank}` : `Normal levels 1–${MAX_LEVEL}`;
 }
 
 function render() {
@@ -218,11 +219,11 @@ $('#reset-button').addEventListener('click', () => {
   tableKey = '';
   history.replaceState(null, '', location.pathname + location.hash);
   render();
-  showToast('Plan reset.');
+  showToast('Reset.');
 });
 $('#copy-exact').addEventListener('click', async () => {
   if (!latestResult) return;
-  try { await navigator.clipboard.writeText(String(latestResult.remaining)); showToast('Exact XP copied.'); }
+  try { await navigator.clipboard.writeText(String(latestResult.remaining)); showToast('Copied.'); }
   catch { showToast('Clipboard access is unavailable.'); }
 });
 $('#share-button').addEventListener('click', async () => {
@@ -232,11 +233,11 @@ $('#share-button').addEventListener('click', async () => {
   url.searchParams.set('mode', state.mode);
   if (state.mode === 'season') url.searchParams.set('season', String(state.season));
   for (const [key, value] of Object.entries(activeDraft())) if (value !== '') url.searchParams.set(key, value);
-  try { await navigator.clipboard.writeText(url.toString()); showToast('Shareable plan link copied.'); }
+  try { await navigator.clipboard.writeText(url.toString()); showToast('Link copied.'); }
   catch { showToast('Clipboard access is unavailable.'); }
 });
 
 const dateLabel = new Date(`${snapshotDate}T12:00:00`);
-$('#snapshot-tag').textContent = `XP DATA • ${new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }).format(dateLabel).toUpperCase()}`;
+$('#snapshot-tag').textContent = `Updated ${new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(dateLabel)}`;
 writeFields();
 render();
