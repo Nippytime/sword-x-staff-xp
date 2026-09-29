@@ -19,6 +19,21 @@ export function shortXp(value) {
   return `${new Intl.NumberFormat('en-US', { maximumFractionDigits: digits }).format(scaled)}${symbol}`;
 }
 
+export function formatHours(hours) {
+  if (hours == null) return '—';
+  const minutes = Math.ceil(hours * 60);
+  if (minutes === 0) return '0m';
+  if (minutes < 60) return `${minutes}m`;
+  if (minutes < 2880) {
+    const h = Math.floor(minutes / 60);
+    const m = minutes % 60;
+    return `${h}h${m ? ` ${m}m` : ''}`;
+  }
+  const h = Math.ceil(minutes / 60);
+  const d = Math.floor(h / 24);
+  return `${d}d${h % 24 ? ` ${h % 24}h` : ''}`;
+}
+
 export function parseXp(raw) {
   if (raw == null || String(raw).trim() === '') return 0;
   const cleaned = String(raw).trim().replace(/[\s,_]/g, '');
@@ -53,15 +68,15 @@ export function normalRank(level) {
   return `${rank} ${['I', 'II', 'III'][Math.floor((level - beginning - 1) / 10)]}`;
 }
 
-export function calculate({ mode = 'normal', season = 1, current, target, earned = 0, daily = 0 }) {
+export function calculate({ mode = 'normal', season = 1, current, target, earned = 0, hourly = 0 }) {
   const ladder = ladderFor(mode, season);
   const last = ladder.costs.length - 1;
   const min = ladder.start;
-  if (![current, target, earned, daily].every(Number.isSafeInteger)) throw new RangeError('Enter whole numbers.');
+  if (![current, target, earned, hourly].every(Number.isSafeInteger)) throw new RangeError('Enter whole numbers.');
   if (current < min || current > last || target < current || target > last) {
     throw new RangeError(`Choose levels between ${min} and ${last}, with your target at or above your current level.`);
   }
-  if (earned < 0 || daily < 0) throw new RangeError('XP cannot be negative.');
+  if (earned < 0 || hourly < 0) throw new RangeError('XP cannot be negative.');
   const nextCost = current < last ? ladder.costs[current + 1] : 0;
   if (earned >= nextCost && nextCost !== 0) {
     throw new RangeError(`XP into this level must be less than ${formatXp(nextCost)}. Raise your current level if you already filled it.`);
@@ -73,13 +88,13 @@ export function calculate({ mode = 'normal', season = 1, current, target, earned
   const progress = target === current ? 100 : Math.min(100, ((totals[current] + earned) / totals[target]) * 100);
   return {
     ...ladder,
-    current, target, earned, daily, remaining, nextCost,
+    current, target, earned, hourly, remaining, nextCost,
     nextRemaining: Math.max(0, nextCost - earned),
     levels: target - current,
     totalToTarget: totals[target],
     totalAtCurrent: totals[current] + earned,
     progress,
-    days: daily > 0 ? Math.ceil(remaining / daily) : null,
+    hours: remaining === 0 ? 0 : hourly > 0 ? remaining / hourly : null,
     shownCurrent: mode === 'season' ? ladder.cap + current : current,
     shownTarget: mode === 'season' ? ladder.cap + target : target,
     score: mode === 'season' ? target * 100 : null
