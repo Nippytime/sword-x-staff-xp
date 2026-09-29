@@ -1,29 +1,15 @@
-# Sword × Staff XP calculator
+# XP Quest · Sword × Staff
 
-Calculate XP for normal levels 1–250 or Season Levels 1–5. These use separate XP pools.
+A game-themed XP calculator for normal and Season levels. Enter your levels, current XP, and optional XP/hour to estimate the XP and time remaining. Includes a searchable XP table, auto-save, and shareable links.
 
-Enter your current level, target, XP earned in your current level, and optional **XP per hour**. The calculator shows XP needed, XP for the next level, and time to your goal. It also saves your inputs and lets you share a link.
+Three background illustrations are cropped from user-supplied game screenshots, with custom SVG icons and a responsive game-inspired UI. No framework or build step.
 
-For Season XP, enter the **season level** (for example, 30), not the displayed player level (for example, 130).
+## Deploy
 
-## GitHub Pages
+Enable GitHub Pages in **Settings → Pages → Deploy from a branch → main → / (root)**. It also works on Vercel as a static site.
 
-In **Settings → Pages**, choose **Deploy from a branch**, then **main** and **/ (root)**. The site runs without a backend or build step.
+## Test
 
-To test locally: `npm test` (Node 22+). To preview: `python3 -m http.server 4173`.
+Run `npm test` (Node 22+). To preview: `python3 -m http.server 4173`.
 
-## XP data
-
-Source: [Purrwikimania](https://www.purrwikimania.com/xp.html). Snapshot: September 29, 2026. Season 6 has no published Season XP ladder in this dataset. Time estimates assume a steady XP/hour rate.
-
-To refresh the bundled XP tables:
-
-```sh
-python3 -m pip install beautifulsoup4
-python3 scripts/refresh_data.py
-npm test
-```
-
-If the source changes, verify the new values before updating the expected totals in the refresh script and tests.
-
-Unofficial fan project.
+XP data: [Purrwikimania](https://www.purrwikimania.com/xp.html), September 29, 2026 snapshot. Normal and Season XP use separate pools. Season 6 has no published ladder in the snapshot. Unofficial fan project.
