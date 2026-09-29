@@ -76,7 +76,7 @@ function updateSelection() {
   fields.target.max = String(ladder.costs.length - 1);
   $('label[for=current]').firstChild.nodeValue = seasonMode ? 'Current Season Level ' : 'Current level ';
   $('label[for=target]').firstChild.nodeValue = seasonMode ? 'Target Season Level ' : 'Target level ';
-  if (seasonMode) ids['season-description'].textContent = `${ladder.rank} cap ${ladder.cap} + Season Level 0–${ladder.limit}. Displayed levels ${ladder.cap}–${ladder.cap + ladder.limit}.`;
+  if (seasonMode) ids['season-description'].textContent = `Cap ${ladder.cap} · Season Lv 0–${ladder.limit}`;
 }
 
 function calculateDraft() {
@@ -111,26 +111,26 @@ function renderResult(result) {
   $('#share-button').disabled = false;
 
   const seasonMode = state.mode === 'season';
-  ids['ladder-name'].textContent = seasonMode ? `SEASON ${result.id} · ${result.rank.toUpperCase()} LADDER` : 'NORMAL PLAYER PROGRESSION';
+  ids['ladder-name'].textContent = seasonMode ? `SEASON ${result.id} · ${result.rank.toUpperCase()}` : 'NORMAL XP';
   ids['needed-short'].textContent = shortXp(result.remaining);
   ids['needed-exact'].textContent = `${formatXp(result.remaining)} XP`;
   ids['display-current'].textContent = `LV ${result.shownCurrent}${seasonMode ? ` (+${result.current})` : ''}`;
   ids['display-target'].textContent = `LV ${result.shownTarget}${seasonMode ? ` (+${result.target})` : ''}`;
   ids['levels-remaining'].textContent = formatXp(result.levels);
-  ids['level-caption'].textContent = seasonMode ? `${formatXp(result.score)} target score` : 'to your goal';
+  ids['level-caption'].textContent = seasonMode ? `${formatXp(result.score)} score` : '';
   ids['next-needed'].textContent = result.nextCost ? shortXp(result.nextRemaining) : 'MAX';
   ids['goal-progress-pct'].textContent = `${Math.min(100, result.progress).toFixed(1).replace(/\.0$/, '')}%`;
   ids['goal-progress-fill'].style.width = `${result.progress}%`;
-  ids['goal-progress-detail'].textContent = seasonMode ? 'Progress in this season’s separate XP pool.' : 'Progress from level 0 toward your target.';
+  ids['goal-progress-detail'].textContent = seasonMode ? 'Season XP only' : '';
   ids['next-level-hint'].textContent = result.nextCost
-    ? `${formatXp(result.earned)} of ${formatXp(result.nextCost)} XP toward the next level.`
-    : 'You have reached this ladder’s maximum level.';
+    ? `${formatXp(result.earned)} / ${formatXp(result.nextCost)} XP`
+    : 'Max level reached.';
   const currentPercent = result.nextCost ? Math.min(100, result.earned / result.nextCost * 100) : 100;
   ids['current-progress'].setAttribute('aria-valuenow', String(Math.round(currentPercent)));
   ids['current-progress-fill'].style.width = `${currentPercent}%`;
   if (result.days == null) {
     ids['time-estimate'].textContent = '—';
-    ids['date-estimate'].textContent = 'add daily XP';
+    ids['date-estimate'].textContent = 'Add daily XP';
   } else if (result.days > 36500) {
     ids['time-estimate'].textContent = `${shortXp(result.days)} d`;
     ids['date-estimate'].textContent = 'over 100 years';
@@ -139,9 +139,9 @@ function renderResult(result) {
     const projected = new Date();
     projected.setHours(12, 0, 0, 0);
     projected.setDate(projected.getDate() + result.days);
-    ids['date-estimate'].textContent = result.days === 0 ? 'goal already met' : `by ${new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(projected)}`;
+    ids['date-estimate'].textContent = result.days === 0 ? 'Goal met' : `by ${new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(projected)}`;
   }
-  ids['result-meta'].textContent = seasonMode ? `SEASON ${result.id} · +${formatXp(result.score)} SCORE` : 'NORMAL XP · EXACT VALUES';
+  ids['result-meta'].textContent = seasonMode ? `SEASON ${result.id}` : 'NORMAL XP';
 }
 
 function renderTable() {
@@ -161,7 +161,7 @@ function renderTable() {
   }
   ids['reference-body'].innerHTML = matches.join('');
   ids['reference-empty'].hidden = matches.length > 0;
-  ids['table-row-count'].textContent = `${matches.length} of ${ladder.costs.length - 1} levels shown`;
+  ids['table-row-count'].textContent = `${matches.length} / ${ladder.costs.length - 1} levels`;
   ids['reference-subtitle'].textContent = state.mode === 'season' ? `Season ${ladder.id} · ${ladder.rank} · cap ${ladder.cap}` : `Normal levels 1–${MAX_LEVEL}`;
 }
 
